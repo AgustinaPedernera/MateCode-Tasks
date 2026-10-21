@@ -1,0 +1,210 @@
+
+/* =========================================
+   MATECODE TASKS - AUTH MOBILE FIRST
+========================================= */
+
+.auth-page {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 28px;
+  padding: 48px 20px;
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ENCABEZADO */
+
+.auth-top {
+  width: 100%;
+  max-width: 460px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.auth-brand {
+  margin: 0;
+  color: var(--primary);
+
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.auth-top .btn {
+  width: auto;
+  min-height: 44px;
+  padding: 10px 16px;
+  flex-shrink: 0;
+}
+
+/* TARJETA PRINCIPAL */
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+
+  padding: 32px 24px;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
+}
+
+.auth-card h1 {
+  margin: 0 0 14px;
+
+  color: var(--text);
+  font-size: clamp(1.65rem, 5vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.auth-description {
+  margin: 0 0 32px;
+
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* FORMULARIO */
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.auth-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-form .form-field label {
+  display: block;
+  margin: 0;
+
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.auth-form .form-field input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+
+  padding: 14px 16px;
+
+  background: var(--bg);
+  color: var(--text);
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  font-size: 1rem;
+}
+
+.auth-form .form-field input::placeholder {
+  color: var(--text-muted);
+}
+
+/* BOTÓN PRINCIPAL */
+
+.auth-form .auth-submit {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 8px;
+
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* MENSAJES */
+
+.auth-message {
+  margin: 20px 0 0;
+  padding: 14px 16px;
+
+  background: var(--surface-soft);
+  border-radius: 10px;
+
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.auth-message.error {
+  color: var(--danger);
+}
+
+.auth-message.success {
+  color: var(--success);
+}
+
+/* ENLACE LOGIN / REGISTRO */
+
+.auth-footer {
+  margin: 30px 0 0;
+  padding-top: 22px;
+
+  border-top: 1px solid var(--border);
+
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.auth-footer a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* TABLETS Y DESKTOP */
+
+@media (min-width: 600px) {
+  .auth-page {
+    padding: 64px 24px;
+    gap: 32px;
+  }
+
+  .auth-card {
+    padding: 42px 38px;
+  }
+}
+
+/* CELULARES PEQUEÑOS */
+
+@media (max-width: 360px) {
+  .auth-page {
+    padding: 32px 14px;
+  }
+
+  .auth-card {
+    padding: 28px 18px;
+  }
+
+  .auth-brand {
+    font-size: 0.75rem;
+  }
+}

@@ -1,0 +1,493 @@
+
+/* =========================================
+   MATECODE TASKS - LIGHT / DARK THEMES
+========================================= */
+
+:root,
+:root[data-theme="light"] {
+  font-family: Inter, system-ui, Arial, sans-serif;
+  color-scheme: light;
+
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-soft: #edf1f8;
+
+  --text: #202b40;
+  --text-muted: #64748b;
+
+  --primary: #526da6;
+  --primary-hover: #3d568a;
+  --primary-text: #ffffff;
+
+  --border: #dbe2ed;
+  --success: #147d69;
+  --danger: #c43f50;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #111827;
+  --surface: #1d293b;
+  --surface-soft: #263449;
+
+  --text: #f1f5fc;
+  --text-muted: #b0bdd0;
+
+  --primary: #a79cf5;
+  --primary-hover: #c4bcff;
+  --primary-text: #17172b;
+
+  --border: #3b4b62;
+  --success: #5ad0ae;
+  --danger: #ff8c9b;
+}
+
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  line-height: 1.5;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+#root {
+  width: 100%;
+  max-width: none;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+h1,
+h2,
+h3,
+p {
+  color: inherit;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+/* =========================================
+   DASHBOARD - MOBILE FIRST
+========================================= */
+
+.dashboard {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+}
+
+/* HEADER */
+
+.dashboard-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.dashboard-brand {
+  margin: 0 0 12px;
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.dashboard-subtitle {
+  margin: 12px 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.dashboard-subtitle strong {
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/* HEADER ACTIONS */
+
+.dashboard-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.dashboard-actions .btn {
+  width: 100%;
+}
+
+/* GRID - ONE COLUMN BY DEFAULT */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+/* CARDS */
+
+.dashboard-card {
+  min-width: 0;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.04);
+}
+
+.dashboard-card h2 {
+  margin: 0 0 22px;
+  color: var(--text);
+  font-size: 1.3rem;
+  line-height: 1.3;
+}
+
+/* FORMS */
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.form-field label {
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 13px 14px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.form-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* BUTTONS */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 44px;
+  padding: 11px 16px;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  background: var(--surface-soft);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--border);
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--surface-soft);
+}
+
+.task-form > .btn-primary {
+  width: 100%;
+}
+
+/* TASK LIST */
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.task-item {
+  min-width: 0;
+  padding: 18px;
+
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.task-item h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.task-description {
+  margin: 0 0 14px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.task-status {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.task-status.completed {
+  color: var(--success);
+}
+
+/* TASK ACTIONS - MOBILE */
+
+.task-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.task-buttons .btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  white-space: normal;
+}
+
+/* THREE BUTTONS: LAST ONE FULL WIDTH */
+
+.task-buttons:has(> :nth-child(3):last-child)
+  > :last-child {
+  grid-column: 1 / -1;
+}
+
+/* EMPTY STATE */
+
+.empty-state {
+  margin: 0;
+  padding: 32px 16px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* FEEDBACK */
+
+.feedback {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--surface-soft);
+  font-size: 0.9rem;
+}
+
+.feedback.error {
+  color: var(--danger);
+}
+
+.feedback.success {
+  color: var(--success);
+}
+
+/* =========================================
+   TABLETS - 600px AND UP
+========================================= */
+
+@media (min-width: 600px) {
+  .dashboard {
+    padding: 40px 28px 72px;
+  }
+
+  .dashboard-actions {
+    flex-direction: row;
+    width: auto;
+  }
+
+  .dashboard-actions .btn {
+    width: auto;
+  }
+
+  .dashboard-card {
+    padding: 26px;
+  }
+
+  .task-buttons {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .task-buttons .btn {
+    width: auto;
+  }
+
+  .task-buttons:has(> :nth-child(3):last-child)
+    > :last-child {
+    grid-column: auto;
+  }
+}
+
+/* =========================================
+   DESKTOP - 900px AND UP
+========================================= */
+
+@media (min-width: 900px) {
+  .dashboard {
+    padding: 48px 32px 88px;
+  }
+
+  .dashboard-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  .dashboard-actions {
+    flex-shrink: 0;
+  }
+
+  .dashboard-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1.2fr);
+    gap: 28px;
+  }
+
+  .dashboard-card {
+    padding: 32px;
+    border-radius: 18px;
+  }
+
+  .dashboard-card h2 {
+    font-size: 1.45rem;
+  }
+
+  .task-item {
+    padding: 22px;
+  }
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

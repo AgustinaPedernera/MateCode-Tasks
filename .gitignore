@@ -26,3 +26,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+# AWS credentials and private files
+*.csv
+*.pem
+*.key
