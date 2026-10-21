@@ -3,7 +3,10 @@ import { useState } from "react";
 import type { SubmitEvent } from "react";
 import { Link } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  reload,
+} from "firebase/auth";
 
 import { auth } from "../services/firebase";
 import { useTheme } from "../hooks/useTheme";
@@ -27,10 +30,48 @@ function Login() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
+
+      const user = userCredential.user;
+
+      // Actualizamos los datos de Firebase para comprobar
+      // si el usuario verificó su correo electrónico.
+      await reload(user);
 
       setSuccess("¡Sesión iniciada correctamente!");
       setPassword("");
+
+      if (user.emailVerified) {
+        // Obtenemos un token actualizado para autenticar
+        // la solicitud ante nuestro backend.
+        const token = await user.getIdToken(true);
+
+        try {
+          const response = await fetch("/api/send-email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            console.error(
+              "No se pudo enviar el correo de bienvenida:",
+              response.status
+            );
+          }
+        } catch (emailError) {
+          console.error(
+            "Error al contactar el servicio de correo:",
+            emailError
+          );
+        }
+      }
     } catch (err) {
       if (
         err instanceof FirebaseError &&
@@ -43,7 +84,7 @@ function Login() {
       ) {
         setError("Demasiados intentos. Probá nuevamente más tarde.");
       } else {
-        setError("No se pudo iniciar sesión. Intentá nuevamente.");
+        setError("No se pudo completar el inicio de sesión. Intentá nuevamente.");
       }
     } finally {
       setLoading(false);

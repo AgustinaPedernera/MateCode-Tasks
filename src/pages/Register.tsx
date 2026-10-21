@@ -3,7 +3,10 @@ import { useState } from "react";
 import type { SubmitEvent } from "react";
 import { Link } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 
 import { auth } from "../services/firebase";
 import { useTheme } from "../hooks/useTheme";
@@ -27,13 +30,18 @@ function Register() {
     setLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email.trim(),
         password
       );
 
-      setSuccess("¡Cuenta creada correctamente!");
+      await sendEmailVerification(userCredential.user);
+
+      setSuccess(
+        "¡Cuenta creada correctamente! Te enviamos un correo para verificar tu dirección. Revisá tu bandeja de entrada y también la carpeta de spam."
+      );
+
       setPassword("");
     } catch (err) {
       if (err instanceof FirebaseError) {
@@ -60,7 +68,7 @@ function Register() {
 
           default:
             setError(
-              "No se pudo crear la cuenta. Intentá nuevamente."
+              "No se pudo completar el registro o enviar el correo de verificación. Si la cuenta ya se creó, probá iniciar sesión."
             );
         }
       } else {
