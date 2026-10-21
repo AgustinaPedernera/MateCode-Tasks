@@ -1,5 +1,10 @@
 
 {
+  "functions": {
+    "api/send-email.ts": {
+      "includeFiles": "node_modules/jose/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/:path*",
