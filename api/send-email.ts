@@ -67,13 +67,24 @@ export default async function handler(
     // Verificar el token de Firebase
     let decodedToken;
 
-    try {
-      decodedToken = await getAuth(app).verifyIdToken(token);
-    } catch {
-      return res.status(401).json({
-        error: "Sesión inválida o expirada",
-      });
-    }
+    
+try {
+  decodedToken = await getAuth(app).verifyIdToken(token);
+} catch (error) {
+  if (error instanceof Error) {
+    console.error("Error al verificar token de Firebase:", {
+      name: error.name,
+      message: error.message,
+    });
+  } else {
+    console.error("Error desconocido al verificar token");
+  }
+
+  return res.status(401).json({
+    error: "Sesión inválida o expirada",
+  });
+}
+
 
     const userId = decodedToken.uid;
     const userEmail = decodedToken.email;
