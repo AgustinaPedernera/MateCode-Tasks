@@ -5,12 +5,12 @@ import {
   Navigate,
 } from "react-router-dom";
 
-
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import VerificarCorreo from "./pages/VerificarCorreo";
 import "./App.css";
 
 function App() {
@@ -27,12 +27,17 @@ function App() {
           <Route path="/login" element={<Login />} />
         </Route>
 
+        <Route
+          path="/verificar-correo"
+          element={<VerificarCorreo />}
+        />
+
         <Route element={<ProtectedRoute />}>
-  <Route
-    path="/dashboard"
-    element={<Dashboard />}
-  />
-</Route>
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
+        </Route>
       </Routes>
     </>
   );

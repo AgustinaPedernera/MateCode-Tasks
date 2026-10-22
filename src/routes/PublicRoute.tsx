@@ -10,6 +10,10 @@ function PublicRoute() {
   }
 
   if (user) {
+    if (!user.emailVerified) {
+      return <Navigate to="/verificar-correo" replace />;
+    }
+
     return <Navigate to="/dashboard" replace />;
   }
 

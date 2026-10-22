@@ -17,7 +17,6 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
@@ -26,7 +25,6 @@ function Login() {
     if (loading) return;
 
     setError("");
-    setSuccess("");
     setLoading(true);
 
     try {
@@ -38,12 +36,13 @@ function Login() {
 
       const user = userCredential.user;
 
-      // Actualizamos los datos de Firebase para comprobar
-      // si el usuario verificó su correo electrónico.
       await reload(user);
 
-      setSuccess("¡Sesión iniciada correctamente!");
-      setPassword("");
+      if (user.emailVerified) {
+        window.location.assign("/dashboard");
+      } else {
+        window.location.assign("/verificar-correo");
+      }
     } catch (err) {
       if (
         err instanceof FirebaseError &&
@@ -56,7 +55,9 @@ function Login() {
       ) {
         setError("Demasiados intentos. Probá nuevamente más tarde.");
       } else {
-        setError("No se pudo completar el inicio de sesión. Intentá nuevamente.");
+        setError(
+          "No se pudo completar el inicio de sesión. Intentá nuevamente."
+        );
       }
     } finally {
       setLoading(false);
@@ -82,14 +83,20 @@ function Login() {
         </button>
       </header>
 
-      <section className="auth-card" aria-labelledby="login-title">
+      <section
+        className="auth-card"
+        aria-labelledby="login-title"
+      >
         <h1 id="login-title">Bienvenida de nuevo</h1>
 
         <p className="auth-description">
           Iniciá sesión para organizar tus tareas y seguir avanzando.
         </p>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form
+          className="auth-form"
+          onSubmit={handleSubmit}
+        >
           <div className="form-field">
             <label htmlFor="login-email">
               Correo electrónico
@@ -136,12 +143,6 @@ function Login() {
         {error && (
           <p className="auth-message error" role="alert">
             {error}
-          </p>
-        )}
-
-        {success && (
-          <p className="auth-message success" role="status">
-            {success}
           </p>
         )}
 

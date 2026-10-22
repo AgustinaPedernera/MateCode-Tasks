@@ -89,11 +89,7 @@ function Dashboard() {
     setSuccess("");
 
     try {
-      await createTask(
-        user.uid,
-        title.trim(),
-        description.trim()
-      );
+      await createTask(user.uid, title.trim(), description.trim());
 
       const updatedTasks = await getTasks(user.uid);
       setTasks(updatedTasks);
@@ -204,17 +200,7 @@ function Dashboard() {
     }
   }
 
-  // Cerrar sesión
-  async function handleLogout() {
-    try {
-      await signOut(auth);
-      navigate("/login", { replace: true });
-    } catch {
-      setError("No se pudo cerrar sesión.");
-    }
-  }
-
-  // Enviar resumen de tareas por correo vía AWS SES
+  // EMAIL: enviar resumen de tareas mediante AWS SES
   async function handleSendEmailSummary() {
     if (!user || sendingEmail) return;
 
@@ -233,26 +219,34 @@ function Dashboard() {
         },
       });
 
-      const data = await response.json().catch(() => null);
+      const data: { message?: string; error?: string } =
+        await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data?.error || "No se pudo enviar el correo con el resumen de tareas."
+          data.error || "No se pudo enviar el resumen por email."
         );
       }
 
-      setSuccess(
-        data?.message ||
-          `¡Resumen de tareas enviado con éxito a ${user.email}!`
-      );
+      setSuccess(data.message || "¡Resumen enviado correctamente!");
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
-          : "Error inesperado al solicitar el envío del resumen."
+          : "Ocurrió un error al enviar el resumen."
       );
     } finally {
       setSendingEmail(false);
+    }
+  }
+
+  // Cerrar sesión
+  async function handleLogout() {
+    try {
+      await signOut(auth);
+      navigate("/login", { replace: true });
+    } catch {
+      setError("No se pudo cerrar sesión.");
     }
   }
 
@@ -276,18 +270,6 @@ function Dashboard() {
         </div>
 
         <div className="dashboard-actions">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSendEmailSummary}
-            disabled={sendingEmail || loadingTasks}
-            title="Enviar un correo con el resumen de todas tus tareas actuales"
-          >
-            {sendingEmail
-              ? "Enviando resumen..."
-              : "📧 Enviar resumen por correo"}
-          </button>
-
           <button
             type="button"
             className="btn btn-secondary"
@@ -334,14 +316,9 @@ function Dashboard() {
         >
           <h2 id="create-task-title">Nueva tarea</h2>
 
-          <form
-            className="task-form"
-            onSubmit={handleCreateTask}
-          >
+          <form className="task-form" onSubmit={handleCreateTask}>
             <div className="form-field">
-              <label htmlFor="task-title">
-                Título
-              </label>
+              <label htmlFor="task-title">Título</label>
 
               <input
                 id="task-title"
@@ -355,9 +332,7 @@ function Dashboard() {
             </div>
 
             <div className="form-field">
-              <label htmlFor="task-description">
-                Descripción
-              </label>
+              <label htmlFor="task-description">Descripción</label>
 
               <textarea
                 id="task-description"
@@ -374,9 +349,7 @@ function Dashboard() {
               className="btn btn-primary"
               disabled={loading}
             >
-              {loading
-                ? "Guardando..."
-                : "+ Agregar tarea"}
+              {loading ? "Guardando..." : "+ Agregar tarea"}
             </button>
           </form>
         </section>
@@ -388,6 +361,17 @@ function Dashboard() {
         >
           <h2 id="tasks-title">Mis tareas</h2>
 
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleSendEmailSummary}
+            disabled={sendingEmail || loadingTasks || !user}
+          >
+            {sendingEmail
+              ? "Enviando resumen..."
+              : "✉️ Enviar resumen por email"}
+          </button>
+
           {loadingTasks ? (
             <p>Cargando tareas...</p>
           ) : tasks.length === 0 ? (
@@ -398,17 +382,12 @@ function Dashboard() {
           ) : (
             <ul className="task-list">
               {tasks.map((task) => (
-                <li
-                  className="task-item"
-                  key={task.id}
-                >
+                <li className="task-item" key={task.id}>
                   {editingTaskId === task.id ? (
                     // MODO EDICIÓN
                     <div className="task-form">
                       <div className="form-field">
-                        <label
-                          htmlFor={`edit-title-${task.id}`}
-                        >
+                        <label htmlFor={`edit-title-${task.id}`}>
                           Editar título
                         </label>
 
@@ -479,9 +458,7 @@ function Dashboard() {
 
                       <span
                         className={`task-status ${
-                          task.completed
-                            ? "completed"
-                            : ""
+                          task.completed ? "completed" : ""
                         }`}
                       >
                         {task.completed

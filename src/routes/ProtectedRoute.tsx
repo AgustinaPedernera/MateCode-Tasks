@@ -20,6 +20,10 @@ function ProtectedRoute() {
     );
   }
 
+  if (!user.emailVerified) {
+    return <Navigate to="/verificar-correo" replace />;
+  }
+
   return <Outlet />;
 }
 
