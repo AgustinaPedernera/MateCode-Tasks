@@ -36,6 +36,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [loadingTasks, setLoadingTasks] = useState(true);
   const [savingTaskId, setSavingTaskId] = useState<string | null>(null);
+  const [sendingEmail, setSendingEmail] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -213,6 +214,48 @@ function Dashboard() {
     }
   }
 
+  // Enviar resumen de tareas por correo vía AWS SES
+  async function handleSendEmailSummary() {
+    if (!user || sendingEmail) return;
+
+    setSendingEmail(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const token = await user.getIdToken();
+
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          data?.error || "No se pudo enviar el correo con el resumen de tareas."
+        );
+      }
+
+      setSuccess(
+        data?.message ||
+          `¡Resumen de tareas enviado con éxito a ${user.email}!`
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Error inesperado al solicitar el envío del resumen."
+      );
+    } finally {
+      setSendingEmail(false);
+    }
+  }
+
   return (
     <main className="dashboard">
       {/* ENCABEZADO */}
@@ -233,6 +276,18 @@ function Dashboard() {
         </div>
 
         <div className="dashboard-actions">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleSendEmailSummary}
+            disabled={sendingEmail || loadingTasks}
+            title="Enviar un correo con el resumen de todas tus tareas actuales"
+          >
+            {sendingEmail
+              ? "Enviando resumen..."
+              : "📧 Enviar resumen por correo"}
+          </button>
+
           <button
             type="button"
             className="btn btn-secondary"

@@ -44,34 +44,6 @@ function Login() {
 
       setSuccess("¡Sesión iniciada correctamente!");
       setPassword("");
-
-      if (user.emailVerified) {
-        // Obtenemos un token actualizado para autenticar
-        // la solicitud ante nuestro backend.
-        const token = await user.getIdToken(true);
-
-        try {
-          const response = await fetch("/api/send-email", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (!response.ok) {
-            console.error(
-              "No se pudo enviar el correo de bienvenida:",
-              response.status
-            );
-          }
-        } catch (emailError) {
-          console.error(
-            "Error al contactar el servicio de correo:",
-            emailError
-          );
-        }
-      }
     } catch (err) {
       if (
         err instanceof FirebaseError &&
